@@ -121,6 +121,13 @@ img { max-width: 100%; display: block; }
   place-items: center;
   transition: background 0.2s;
 }
+.search-logo {
+  font-size: 19px;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  color: #fff;
+}
 .search button:hover { background: var(--rosa-escuro); }
 
 .btn-whatsapp {
