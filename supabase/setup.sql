@@ -44,11 +44,17 @@ create policy "categorias select publico" on public.categorias
 create policy "produtos select publico" on public.produtos
   for select to anon, authenticated using (true);
 
+-- So o e-mail abaixo pode escrever/alterar/excluir.
+-- Para dar acesso a outra pessoa, troque o e-mail nesta policy.
 create policy "categorias admin" on public.categorias
-  for all to authenticated using (true) with check (true);
+  for all to authenticated
+  using (auth.jwt() ->> 'email' = 'mastertecheletronica15@gmail.com')
+  with check (auth.jwt() ->> 'email' = 'mastertecheletronica15@gmail.com');
 
 create policy "produtos admin" on public.produtos
-  for all to authenticated using (true) with check (true);
+  for all to authenticated
+  using (auth.jwt() ->> 'email' = 'mastertecheletronica15@gmail.com')
+  with check (auth.jwt() ->> 'email' = 'mastertecheletronica15@gmail.com');
 
 -- ---------- STORAGE (fotos) ----------
 
@@ -65,13 +71,16 @@ create policy "fotos leitura publica" on storage.objects
   for select to anon, authenticated using (bucket_id = 'fotos');
 
 create policy "fotos escrita admin" on storage.objects
-  for insert to authenticated with check (bucket_id = 'fotos');
+  for insert to authenticated
+  with check (bucket_id = 'fotos' and auth.jwt() ->> 'email' = 'mastertecheletronica15@gmail.com');
 
 create policy "fotos atualizar admin" on storage.objects
-  for update to authenticated using (bucket_id = 'fotos');
+  for update to authenticated
+  using (bucket_id = 'fotos' and auth.jwt() ->> 'email' = 'mastertecheletronica15@gmail.com');
 
 create policy "fotos deletar admin" on storage.objects
-  for delete to authenticated using (bucket_id = 'fotos');
+  for delete to authenticated
+  using (bucket_id = 'fotos' and auth.jwt() ->> 'email' = 'mastertecheletronica15@gmail.com');
 
 -- ---------- CATEGORIAS INICIAIS ----------
 
