@@ -87,10 +87,9 @@ create policy "fotos deletar admin" on storage.objects
 insert into public.categorias (nome, slug, ordem) values
   ('Feminino', 'feminino', 1),
   ('Masculino', 'masculino', 2),
-  ('Infantil', 'infantil', 3),
-  ('Calçados', 'calcados', 4),
-  ('Bolsas & Acessórios', 'bolsas', 5),
-  ('Casa & Variedades', 'variedades', 6)
+  ('Calçados', 'calcados', 3),
+  ('Bolsas & Acessórios', 'bolsas', 4),
+  ('Casa & Variedades', 'variedades', 5)
 on conflict (slug) do nothing;
 
 -- ---------- PRODUTOS INICIAIS ----------
@@ -105,9 +104,6 @@ insert into public.produtos (nome, categoria_id, preco, preco_antigo, cor, descr
   ('Camiseta Básica Premium', (select id from categorias where slug='masculino'), 39.9, 54.9, '#3d5a6c', 'Camiseta básica premium em algodão penteado, com gola reforçada. A peça coringa do guarda-roupa.', true, null),
   ('Calça Jeans Masculina', (select id from categorias where slug='masculino'), 109.9, 149.9, '#47698a', 'Calça jeans masculina reta, lavagem azul escura. Durável e confortável para todas as ocasiões.', false, null),
   ('Bermuda Masculina', (select id from categorias where slug='masculino'), 69.9, 89.9, '#6b7d52', 'Bermuda masculina com tecido de secagem rápida, ideal para o verão e atividades ao ar livre.', false, null),
-  ('Vestido Infantil Floral', (select id from categorias where slug='infantil'), 59.9, 79.9, '#f2a0b5', 'Vestido infantil com estampa floral, tecido confortável e sem etiqueta. Tamanhos 2 ao 12.', false, null),
-  ('Camiseta Infantil Colorida', (select id from categorias where slug='infantil'), 34.9, 44.9, '#f29a4a', 'Camiseta infantil de algodão, leve e fresquinha. Cores vibrantes que as crianças adoram.', true, null),
-  ('Tênis Infantil', (select id from categorias where slug='infantil'), 79.9, 109.9, '#58a6a0', 'Tênis infantil com velcro, leve e flexível, ideal para brincar com segurança e conforto.', false, null),
   ('Tênis Feminino Casual', (select id from categorias where slug='calcados'), 149.9, 199.9, '#e7a6b8', 'Tênis feminino casual em couro sintético, com solado confortável. Combina com tudo.', true, null),
   ('Sandália Salto Grosso', (select id from categorias where slug='calcados'), 119.9, 159.9, '#b05c7a', 'Sandália de salto grosso com tira ajustável, firme e elegante. Perfeita para o dia e a noite.', false, null),
   ('Sapatilha Feminina', (select id from categorias where slug='calcados'), 89.9, 119.9, '#7d5a8c', 'Sapatilha feminina com palmilha de gel, super macia para o dia inteiro de conforto.', false, null),
