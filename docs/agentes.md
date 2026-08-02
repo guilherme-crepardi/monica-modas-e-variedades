@@ -6,6 +6,8 @@ Site catálogo (vitrine) para a loja **Monica Modas e Variedades**, inspirado vi
 
 Os dados (produtos e categorias) ficam no **Supabase** e são gerenciados pelo **painel administrativo** (`admin.html`) — não é mais necessário editar código para adicionar produtos ou fotos.
 
+**Textos atuais da loja:** topbar com "Frete: combinamos no momento da compra" e "Parcele em até 3x sem juros". O antigo banner de cupom "Ganhe 10% OFF / MONICA10" foi removido.
+
 ## Arquitetura
 
 Site estático (HTML/CSS/JS puro) hospedado na **Vercel**, com **Supabase** como banco de dados e armazenamento de fotos.
@@ -42,7 +44,7 @@ raiz/
 - **Tabela `produtos`:** `id`, `nome`, `categoria_id` (FK), `preco`, `preco_antigo`, `cor`, `descricao`, `em_oferta`, `imagem_url`
 - **Storage bucket `fotos`:** público para leitura; escrita só para usuários autenticados
 - **RLS:** leitura pública (anon) para loja; escrita apenas para usuários logados (painel)
-- **Auth:** usuário criado em Authentication → Users (e-mail + senha)
+- **Auth:** usuário criado em Authentication → Users (e-mail + senha). Usuário ativo: `mastertecheletronica15@gmail.com` (senha definida no Supabase, não armazenada em docs por segurança)
 
 ### Configuração (já feita)
 
@@ -51,7 +53,7 @@ raiz/
 
 ## Painel administrativo
 
-Acessar `admin.html` (na loja publicada, ficará em `https://site.vercel.app/admin.html`).
+Acessar `admin.html` (na loja publicada: `https://monica-modas-e-variedades.vercel.app/admin.html`).
 
 - **Login:** e-mail + senha criada no Supabase (Authentication → Users)
 - **Aba Categorias:** criar, renomear e excluir categorias (excluir remove os produtos da categoria)
@@ -62,7 +64,7 @@ Acessar `admin.html` (na loja publicada, ficará em `https://site.vercel.app/adm
 
 ## WhatsApp
 
-- Número em `js/config.js` (`NUMERO_WHATSAPP`, formato internacional sem `+`)
+- Número em `js/config.js` (`NUMERO_WHATSAPP = "5511940168045"`, formato internacional sem `+`)
 - Todos os botões (card, modal, cabeçalho, rodapé, flutuante) apontam para `wa.me/<numero>`
 - Cada produto gera mensagem pré-preenchida com nome, categoria e preço
 
@@ -83,13 +85,24 @@ O Vercel atualiza sozinho (~1 min). Alterações de produtos/fotos feitas pelo p
 
 ## Funcionalidades
 
-- Vitrine responsiva em grid
+- Vitrine responsiva em grid (imagem do card em formato retrato 3:4, preenchendo o card)
 - Busca por nome/categoria + filtros por categoria (dinâmicos, vindos do banco) + "Só Ofertas"
 - Modal de detalhes (foto, preço, parcelamento 3x, descrição, botão WhatsApp)
 - Selo "Oferta" para `em_oferta: true`
 - Placeholder SVG automático para produtos sem foto
 - Painel administrativo com login e upload de fotos
 - Toast de confirmação e newsletter
+- Topbar com aviso de frete combinado no momento da compra
+
+## Últimas alterações
+
+- Integração com Supabase (banco + storage + painel admin)
+- Categorias agora são dinâmicas (vindas do banco, aparecem no menu e nos cards)
+- Removido o banner "Ganhe 10% OFF / cupom MONICA10"
+- Topbar alterado de "FRETE GRÁTIS" para "Frete: combinamos no momento da compra"
+- Corrigido o bug de clique nas categorias (a renderização das categorias passou a ocorrer antes da configuração dos eventos em `js/app.js`)
+- Número do WhatsApp atualizado para `5511940168045`
+- Cartões de produto em formato retrato 3:4 com foto preenchendo o card
 
 ## Manutenção comum
 
