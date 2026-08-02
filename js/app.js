@@ -325,8 +325,8 @@
   try {
     iniciarClient();
     await carregarDados();
-    configurarEventos();
     renderizarCategorias();
+    configurarEventos();
     renderizar();
   } catch (erro) {
     console.error(erro);
