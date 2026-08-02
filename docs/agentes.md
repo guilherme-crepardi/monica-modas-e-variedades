@@ -2,86 +2,98 @@
 
 ## Visão geral
 
-Site catálogo (vitrine) para a loja **Monica Modas e Variedades**, inspirado visualmente na Zattini. O objetivo é exibir os produtos com fotos e preços; a compra é feita pelo WhatsApp. Não há carrinho nem checkout.
+Site catálogo (vitrine) para a loja **Monica Modas e Variedades**, inspirado visualmente na Zattini. Exibe os produtos com fotos e preços; a compra é feita pelo WhatsApp. Não há carrinho nem checkout.
+
+Os dados (produtos e categorias) ficam no **Supabase** e são gerenciados pelo **painel administrativo** (`admin.html`) — não é mais necessário editar código para adicionar produtos ou fotos.
 
 ## Arquitetura
 
-Site 100% estático (HTML/CSS/JS puro). Não requer servidor, build nem instalação — basta abrir o `index.html`.
+Site estático (HTML/CSS/JS puro) hospedado na **Vercel**, com **Supabase** como banco de dados e armazenamento de fotos.
 
 ```
 raiz/
-├── index.html          → estrutura da página (header, hero, categorias, produtos, rodapé)
+├── index.html          → loja pública (sem login)
+├── admin.html          → painel administrativo (com login)
 ├── css/
-│   └── style.css       → todo o visual (cores, grid, responsividade, modal, toast)
+│   ├── style.css       → visual da loja
+│   └── admin.css       → visual do painel
 ├── js/
-│   ├── produtos.js     → dados dos produtos (catálogo) + número do WhatsApp
-│   └── app.js          → lógica: renderização, busca, filtros, modal, links WhatsApp
-├── fotos/              → fotos reais dos produtos (criar com imagem: "fotos/arquivo.jpg")
+│   ├── config.js       → URL do Supabase, anon key e número do WhatsApp
+│   ├── app.js          → loja: carrega dados do Supabase e renderiza
+│   └── admin.js        → painel: login, CRUD de categorias/produtos, upload
+├── supabase/
+│   └── setup.sql       → cria tabelas, RLS, storage e produtos iniciais
+├── fotos/              → fotos usadas como caminho relativo (imagem_url)
 └── docs/
     └── agentes.md      → este documento
 ```
 
 ### Fluxo de dados
 
-1. `produtos.js` define a constante global `produtos` (array de objetos) e `NUMERO_WHATSAPP`.
-2. `app.js` lê `produtos`, renderiza os cards no `#products-grid` e conecta busca, filtros e modal.
-3. Se o produto não tiver campo `imagem`, o `app.js` gera automaticamente uma imagem SVG placeholder (data URI) com ícone da categoria e nome do produto.
+1. A loja (`app.js`) consulta o Supabase (chave anon, **somente leitura pública**):
+   - `categorias` → nome, slug, ordem
+   - `produtos` → com a categoria correspondente (join)
+2. O painel (`admin.js`) autentica com e-mail/senha e faz **criar/editar/excluir** categorias e produtos, além de **upload de fotos** para o storage `fotos`.
+3. Se o produto não tiver foto (`imagem_url` vazio), a loja gera um placeholder SVG automático com o ícone da categoria.
 
-## Como adicionar produtos
+## Supabase
 
-Editar `js/produtos.js`, colando um novo bloco antes da linha final `];`.
+- **Tabela `categorias`:** `id`, `nome`, `slug`, `ordem`
+- **Tabela `produtos`:** `id`, `nome`, `categoria_id` (FK), `preco`, `preco_antigo`, `cor`, `descricao`, `em_oferta`, `imagem_url`
+- **Storage bucket `fotos`:** público para leitura; escrita só para usuários autenticados
+- **RLS:** leitura pública (anon) para loja; escrita apenas para usuários logados (painel)
+- **Auth:** usuário criado em Authentication → Users (e-mail + senha)
 
-Campos obrigatórios:
+### Configuração (já feita)
 
-| Campo | Tipo | Descrição |
-|---|---|---|
-| `id` | number | Número único, nunca repetido |
-| `nome` | string | Nome do produto |
-| `categoria` | string | Uma de: `feminino`, `masculino`, `infantil`, `calcados`, `bolsas`, `variedades` |
-| `preco` | number | Preço atual |
-| `cor` | string | Cor usada no placeholder SVG (se não houver imagem) |
-| `descricao` | string | Texto exibido no modal |
-| `emOferta` | boolean | `true` mostra o selo "Oferta" e entra no filtro "Ofertas" |
+- `js/config.js`: `SUPABASE_URL`, `SUPABASE_ANON_KEY` (chave pública, segura) e `NUMERO_WHATSAPP`
+- `supabase/setup.sql`: executado no SQL Editor do Supabase
 
-Campos opcionais:
+## Painel administrativo
 
-| Campo | Tipo | Descrição |
-|---|---|---|
-| `precoAntigo` | number | Preço antigo riscado (mostra o desconto) |
-| `imagem` | string | Caminho da foto real, ex.: `"fotos/bolsa-festa.jpg"` |
+Acessar `admin.html` (na loja publicada, ficará em `https://site.vercel.app/admin.html`).
 
-Regras de sintaxe importantes (quebram o site se erradas):
-
-- Todo bloco termina com `},` (vírgula). Só o **último** produto do array termina com `}` sem vírgula, antes de `];`.
-- Caminho de imagem é **relativo** (`fotos/arquivo.jpg`), nunca use caminho absoluto do Windows (`C:\...`).
-- O nome do arquivo em `imagem` deve ser idêntico ao arquivo na pasta `fotos/` (maiúsculas, espaços, acentos contam).
-
-## Trocar fotos
-
-1. Copiar a foto para a pasta `fotos/`.
-2. Adicionar/editar o campo `imagem` do produto: `imagem: "fotos/nome-do-arquivo.jpg"`.
-3. Recarregar a página (`F5`).
+- **Login:** e-mail + senha criada no Supabase (Authentication → Users)
+- **Aba Categorias:** criar, renomear e excluir categorias (excluir remove os produtos da categoria)
+- **Aba Produtos:** criar, editar e excluir produtos
+  - Campos: nome, categoria, preço, preço antigo, descrição, cor de destaque, "em oferta", foto
+  - **Foto:** selecionar arquivo → upload automático para o storage → link público salvo
+- Botão **Ver site** para abrir a loja
 
 ## WhatsApp
 
-- Número configurado em `js/produtos.js` na constante `NUMERO_WHATSAPP` (formato internacional sem `+`).
-- Todos os botões (card, modal, cabeçalho, rodapé, botão flutuante) apontam para `wa.me/<numero>`.
-- Cada produto gera uma mensagem pré-preenchida com nome, categoria e preço.
+- Número em `js/config.js` (`NUMERO_WHATSAPP`, formato internacional sem `+`)
+- Todos os botões (card, modal, cabeçalho, rodapé, flutuante) apontam para `wa.me/<numero>`
+- Cada produto gera mensagem pré-preenchida com nome, categoria e preço
 
-## Funcionalidades (features atuais)
+## Deploy
 
-- Vitrine de produtos em grid responsivo (4 colunas → 3 → 2 no celular).
-- Busca por nome ou categoria (campo de busca no cabeçalho).
-- Filtros por categoria (menu de navegação, chips e cards de categoria) + filtro "Só Ofertas".
-- Modal de detalhes do produto (foto, preço, parcelamento 3x, descrição, botão WhatsApp).
-- Selos de "Oferta" nos produtos com `emOferta: true`.
-- Parcelamento exibido como "3x sem juros" calculado automaticamente sobre o preço.
-- Placeholder SVG automático para produtos sem foto real.
-- Seções: topbar de promoção, header com busca, hero, benefícios, categorias, produtos, banner de cupom (MONICA10), newsletter, rodapé.
-- Toast de confirmação (ex.: cadastro na newsletter).
-- Responsivo (mobile-first breakpoints em `css/style.css`).
+- **GitHub:** repositório `guilherme-crepardi/monica-modas-e-variedades`
+- **Vercel:** deploy automático a partir do `main` do GitHub
+
+### Como publicar alterações de código
+
+```
+git add .
+git commit -m "descrição da mudança"
+git push
+```
+
+O Vercel atualiza sozinho (~1 min). Alterações de produtos/fotos feitas pelo painel **não exigem deploy** — já valem na hora.
+
+## Funcionalidades
+
+- Vitrine responsiva em grid
+- Busca por nome/categoria + filtros por categoria (dinâmicos, vindos do banco) + "Só Ofertas"
+- Modal de detalhes (foto, preço, parcelamento 3x, descrição, botão WhatsApp)
+- Selo "Oferta" para `em_oferta: true`
+- Placeholder SVG automático para produtos sem foto
+- Painel administrativo com login e upload de fotos
+- Toast de confirmação e newsletter
 
 ## Manutenção comum
 
-- Erro "nada aparece no site" → provavelmente quebrou a sintaxe de `js/produtos.js`. Verificar vírgulas nos blocos.
-- Erro no `F5` após trocar foto → conferir se o arquivo existe em `fotos/` com o nome exato informado no campo `imagem`.
+- **Loja sem produtos:** conferir se `supabase/setup.sql` foi executado e se `js/config.js` tem a URL e anon key corretas.
+- **Foto não aparece:** conferir `imagem_url` (pode ser caminho relativo `fotos/...` ou URL pública do storage `https://<projeto>.supabase.co/storage/v1/object/public/fotos/...`).
+- **Painel não loga:** conferir se o usuário existe em Authentication → Users e se a senha está correta.
+- **Alterações no banco não aparecem na loja:** atualizar a página (F5).

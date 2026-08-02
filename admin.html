@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel - Monica Modas e Variedades</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <header class="admin-header">
+    <div class="container admin-header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">M</span>
+        <span class="logo-text"><strong>Monica Modas</strong><small>Painel administrativo</small></span>
+      </a>
+      <div class="admin-header-actions" id="header-actions" hidden>
+        <a href="index.html" class="btn btn-light">Ver site</a>
+        <button class="btn btn-outline" id="btn-logout">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="admin-login" id="login-view">
+      <div class="admin-card">
+        <h1>Entrar no painel</h1>
+        <p>Acesse com o usuário criado no Supabase.</p>
+        <form id="login-form">
+          <label>
+            <span>E-mail</span>
+            <input type="email" id="login-email" required autocomplete="username" />
+          </label>
+          <label>
+            <span>Senha</span>
+            <input type="password" id="login-password" required autocomplete="current-password" />
+          </label>
+          <button type="submit" class="btn btn-primary" id="login-submit">Entrar</button>
+          <p class="admin-msg" id="login-msg"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="admin-dash" id="dashboard-view" hidden>
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="categorias">Categorias</button>
+        <button class="admin-tab" data-tab="produtos">Produtos</button>
+      </div>
+
+      <div id="tab-categorias" class="admin-tab-panel">
+        <div class="admin-card">
+          <h2 id="cat-title">Nova categoria</h2>
+          <form id="categoria-form" class="admin-form">
+            <label>
+              <span>Nome da categoria</span>
+              <input type="text" id="cat-nome" placeholder="Ex.: Moda Íntima" required />
+            </label>
+            <label>
+              <span>Slug (identificador)</span>
+              <input type="text" id="cat-slug" placeholder="ex.: moda-intima" required />
+            </label>
+            <div class="admin-form-actions">
+              <button type="submit" class="btn btn-primary" id="cat-save">Salvar categoria</button>
+              <button type="button" class="btn btn-ghost" id="cat-cancelar" hidden>Cancelar</button>
+            </div>
+          </form>
+        </div>
+        <div class="admin-card">
+          <h2>Categorias cadastradas</h2>
+          <ul class="admin-list" id="categorias-list"></ul>
+        </div>
+      </div>
+
+      <div id="tab-produtos" class="admin-tab-panel" hidden>
+        <div class="admin-card">
+          <h2 id="prod-title">Novo produto</h2>
+          <form id="produto-form" class="admin-form">
+            <div class="admin-form-grid">
+              <label>
+                <span>Nome do produto</span>
+                <input type="text" id="prod-nome" required />
+              </label>
+              <label>
+                <span>Categoria</span>
+                <select id="prod-categoria" required></select>
+              </label>
+              <label>
+                <span>Preço (R$)</span>
+                <input type="number" id="prod-preco" step="0.01" min="0" required />
+              </label>
+              <label>
+                <span>Preço antigo (R$) — opcional</span>
+                <input type="number" id="prod-preco-antigo" step="0.01" min="0" />
+              </label>
+            </div>
+            <label>
+              <span>Descrição</span>
+              <textarea id="prod-descricao" rows="3" placeholder="Detalhes do produto..."></textarea>
+            </label>
+            <div class="admin-form-grid admin-form-grid-3">
+              <label>
+                <span>Cor do destaque</span>
+                <input type="color" id="prod-cor" value="#e75480" />
+              </label>
+              <label class="admin-check">
+                <input type="checkbox" id="prod-oferta" />
+                <span>Em oferta</span>
+              </label>
+              <label>
+                <span>Foto do produto</span>
+                <input type="file" id="prod-imagem" accept="image/*" />
+              </label>
+            </div>
+            <div class="admin-preview" id="prod-preview"></div>
+            <div class="admin-form-actions">
+              <button type="submit" class="btn btn-primary" id="prod-save">Salvar produto</button>
+              <button type="button" class="btn btn-ghost" id="prod-cancelar" hidden>Cancelar</button>
+            </div>
+          </form>
+        </div>
+        <div class="admin-card">
+          <h2>Produtos cadastrados</h2>
+          <div class="admin-list" id="produtos-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
