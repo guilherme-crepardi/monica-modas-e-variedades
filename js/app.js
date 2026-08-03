@@ -30,6 +30,7 @@
   const navDinamico = document.getElementById("nav-dinamico");
   const categoriasGrid = document.getElementById("categories-grid");
   const filtersWrap = document.getElementById("products-filters");
+  const productsEl = document.getElementById("produtos");
 
   let supabase;
   let categorias = [];
@@ -154,7 +155,14 @@
       '<button class="filter-chip chip-oferta" data-categoria="ofertas">Só Ofertas</button>';
   }
 
+  function aplicarFundoCategoria(cat) {
+    productsEl.classList.remove("cat-feminino", "cat-masculino");
+    if (cat === "feminino") productsEl.classList.add("cat-feminino");
+    else if (cat === "masculino") productsEl.classList.add("cat-masculino");
+  }
+
   function renderizar() {
+    aplicarFundoCategoria(filtroAtual);
     const lista = produtosFiltrados();
     grids.innerHTML = "";
 

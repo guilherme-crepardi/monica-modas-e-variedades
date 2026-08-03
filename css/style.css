@@ -356,8 +356,15 @@ img { max-width: 100%; display: block; }
 /* ===== Products ===== */
 .products {
   padding: 44px 0 64px;
-  background: var(--cinza-claro);
+  background: #fff;
   margin-top: 36px;
+  transition: background 0.4s ease;
+}
+.products.cat-feminino {
+  background: linear-gradient(180deg, #ffe3f1 0%, #fff0f7 100%);
+}
+.products.cat-masculino {
+  background: linear-gradient(180deg, #e3edff 0%, #f0f5ff 100%);
 }
 .products-head {
   display: flex;
