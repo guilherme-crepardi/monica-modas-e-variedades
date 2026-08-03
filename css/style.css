@@ -360,7 +360,7 @@ img { max-width: 100%; display: block; }
   background: #fff;
   margin-top: 36px;
   transition: background 0.4s ease;
-  scroll-margin-top: 12px;
+  scroll-margin-top: calc(var(--filter-top, 0) + 10px);
 }
 .products.cat-feminino {
   background: linear-gradient(180deg, #ffe3f1 0%, #fff0f7 100%);
@@ -737,6 +737,8 @@ img { max-width: 100%; display: block; }
   .btn-whatsapp span { display: none; }
   .btn-whatsapp { padding: 11px; }
   .hero-art { display: none; }
+  .header { position: static; }
+  .nav { position: sticky; top: 0; z-index: 100; }
 }
 @media (max-width: 520px) {
   .logo-text strong { font-size: 15px; }

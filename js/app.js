@@ -247,15 +247,20 @@
     document.body.style.overflow = "";
   }
 
+  function alturaSticky() {
+    const navEl = document.querySelector(".nav");
+    const mobile = window.innerWidth <= 900;
+    const el = mobile && navEl ? navEl : headerEl;
+    return el ? el.offsetHeight : 0;
+  }
+
   function atualizarFilterTop() {
-    const h = headerEl ? headerEl.offsetHeight : 0;
-    document.documentElement.style.setProperty("--filter-top", h + "px");
+    document.documentElement.style.setProperty("--filter-top", alturaSticky() + "px");
   }
 
   function minimizarFiltro() {
     if (!productsHead) return;
-    const limiar = (headerEl ? headerEl.offsetHeight : 0) + 10;
-    productsHead.classList.toggle("min", window.scrollY > limiar);
+    productsHead.classList.toggle("min", window.scrollY > alturaSticky() + 10);
   }
 
   function setarFiltro(cat) {
