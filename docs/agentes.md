@@ -104,6 +104,9 @@ O Vercel atualiza sozinho (~1 min). Alterações de produtos/fotos feitas pelo p
 - Corrigido o bug de clique nas categorias (a renderização das categorias passou a ocorrer antes da configuração dos eventos em `js/app.js`)
 - Número do WhatsApp atualizado para `5511940168045`
 - Cartões de produto em formato retrato 3:4 com foto preenchendo o card
+- Fundo da vitrine muda conforme categoria (rosa em Feminino, azul em Masculino, branco nas demais)
+- Filtro fixo que minimiza ao rolar + responsividade mobile
+- Barra de categorias movida para fora do header: fica fixa no topo no celular (no desktop o header + categorias ficam juntos no topo)
 
 ## Manutenção comum
 
