@@ -31,6 +31,8 @@
   const categoriasGrid = document.getElementById("categories-grid");
   const filtersWrap = document.getElementById("products-filters");
   const productsEl = document.getElementById("produtos");
+  const headerEl = document.querySelector(".header");
+  const productsHead = document.querySelector(".products-head");
 
   let supabase;
   let categorias = [];
@@ -245,6 +247,17 @@
     document.body.style.overflow = "";
   }
 
+  function atualizarFilterTop() {
+    const h = headerEl ? headerEl.offsetHeight : 0;
+    document.documentElement.style.setProperty("--filter-top", h + "px");
+  }
+
+  function minimizarFiltro() {
+    if (!productsHead) return;
+    const limiar = (headerEl ? headerEl.offsetHeight : 0) + 10;
+    productsHead.classList.toggle("min", window.scrollY > limiar);
+  }
+
   function setarFiltro(cat) {
     filtroAtual = cat;
     buscaAtual = "";
@@ -307,6 +320,12 @@
       mostrarToast("Cadastro realizado! Em breve você recebe nossas novidades.");
     });
 
+    window.addEventListener("scroll", minimizarFiltro, { passive: true });
+    window.addEventListener("resize", function () {
+      atualizarFilterTop();
+      minimizarFiltro();
+    });
+
     const waBase = "https://wa.me/" + NUMERO_WHATSAPP;
     document.querySelectorAll("[id^='link-whatsapp']").forEach(function (a) {
       let msg = "Olá! Gostaria de saber mais sobre os produtos da loja.";
@@ -334,6 +353,8 @@
     renderizarCategorias();
     configurarEventos();
     renderizar();
+    atualizarFilterTop();
+    minimizarFiltro();
   } catch (erro) {
     console.error(erro);
     grids.innerHTML = '<p class="no-results">Não foi possível carregar os produtos. Verifique a conexão com o Supabase.</p>';
