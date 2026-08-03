@@ -6,7 +6,7 @@ Site catálogo (vitrine) para a loja **Monica Modas e Variedades**, inspirado vi
 
 Os dados (produtos e categorias) ficam no **Supabase** e são gerenciados pelo **painel administrativo** (`admin.html`) — não é mais necessário editar código para adicionar produtos ou fotos.
 
-**Textos atuais da loja:** topbar com "Frete: combinamos no momento da compra" e "Parcele em até 3x sem juros". O antigo banner de cupom "Ganhe 10% OFF / MONICA10" foi removido.
+**Textos atuais da loja:** topbar com "Parcele em até 3x sem juros". Não há mais referências a frete na página. O antigo banner de cupom "Ganhe 10% OFF / MONICA10" foi removido.
 
 ## Arquitetura
 
@@ -92,14 +92,15 @@ O Vercel atualiza sozinho (~1 min). Alterações de produtos/fotos feitas pelo p
 - Placeholder SVG automático para produtos sem foto
 - Painel administrativo com login e upload de fotos
 - Toast de confirmação e newsletter
-- Topbar com aviso de frete combinado no momento da compra
+- Topbar com "Parcele em até 3x sem juros" (sem menção a frete)
 
 ## Últimas alterações
 
 - Integração com Supabase (banco + storage + painel admin)
 - Categorias agora são dinâmicas (vindas do banco, aparecem no menu e nos cards)
 - Removido o banner "Ganhe 10% OFF / cupom MONICA10"
-- Topbar alterado de "FRETE GRÁTIS" para "Frete: combinamos no momento da compra"
+- Topbar alterado de "FRETE GRÁTIS" para "Parcele em até 3x sem juros"
+- Removidas todas as referências a frete/entrega da página (topbar, benefícios e rodapé)
 - Corrigido o bug de clique nas categorias (a renderização das categorias passou a ocorrer antes da configuração dos eventos em `js/app.js`)
 - Número do WhatsApp atualizado para `5511940168045`
 - Cartões de produto em formato retrato 3:4 com foto preenchendo o card

@@ -42,14 +42,10 @@ img { max-width: 100%; display: block; }
 }
 .topbar-inner {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 12px;
   padding-top: 8px;
   padding-bottom: 8px;
-}
-@media (max-width: 640px) {
-  .topbar-right { display: none; }
-  .topbar-inner { justify-content: center; }
 }
 
 /* ===== Header ===== */
