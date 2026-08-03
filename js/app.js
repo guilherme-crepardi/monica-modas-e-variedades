@@ -32,6 +32,7 @@
   const filtersWrap = document.getElementById("products-filters");
   const productsEl = document.getElementById("produtos");
   const headerEl = document.querySelector(".header");
+  const navEl = document.querySelector(".nav");
   const productsHead = document.querySelector(".products-head");
 
   let supabase;
@@ -248,13 +249,16 @@
   }
 
   function alturaSticky() {
-    const navEl = document.querySelector(".nav");
+    const hh = headerEl ? headerEl.offsetHeight : 0;
+    const nh = navEl ? navEl.offsetHeight : 0;
     const mobile = window.innerWidth <= 900;
-    const el = mobile && navEl ? navEl : headerEl;
-    return el ? el.offsetHeight : 0;
+    return mobile ? nh : hh + nh;
   }
 
   function atualizarFilterTop() {
+    const hh = headerEl ? headerEl.offsetHeight : 0;
+    const mobile = window.innerWidth <= 900;
+    document.documentElement.style.setProperty("--nav-top", (mobile ? 0 : hh) + "px");
     document.documentElement.style.setProperty("--filter-top", alturaSticky() + "px");
   }
 
