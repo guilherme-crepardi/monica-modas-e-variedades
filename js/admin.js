@@ -321,13 +321,13 @@
       return;
     }
     loginForm.reset();
-    atualizarUI();
+    await atualizarUI();
     toast("Bem-vindo(a)!");
   });
 
   btnLogout.addEventListener("click", async function () {
     await supabase.auth.signOut();
-    atualizarUI();
+    await atualizarUI();
   });
 
   catForm.addEventListener("submit", salvarCategoria);
@@ -335,8 +335,9 @@
   prodForm.addEventListener("submit", salvarProduto);
   prodCancelar.addEventListener("click", cancelarProduto);
 
-  function atualizarUI() {
-    const logado = !!supabase.auth.getSession();
+  async function atualizarUI() {
+    const { data } = await supabase.auth.getSession();
+    const logado = !!data.session;
     loginView.hidden = logado;
     dashView.hidden = !logado;
     headerActions.hidden = !logado;
